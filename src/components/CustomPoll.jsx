@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Poll from "react-polls";
+import { Button } from "flowbite-react";
 
-const CustomPoll = ({ pollQuestion, answers }) => {
+const CustomPoll = ({ pollQuestion, answers, setPolls }) => {
   const [pollAnswers, setPollAnswers] = useState(answers);
 
   const handleVote = (voteAnswer) => {
@@ -13,6 +14,11 @@ const CustomPoll = ({ pollQuestion, answers }) => {
     // send data
   };
 
+  const handleDelete = () => {
+      // logic to delete back
+      setPolls(prev => prev.filter(val => val["pollQuestion"]!==pollQuestion))
+  }
+
   return (
     <div className={"bg-white w-1/2 rounded mt-5"}>
       <Poll
@@ -21,6 +27,9 @@ const CustomPoll = ({ pollQuestion, answers }) => {
         customStyles={{ theme: "blue" }}
         onVote={handleVote}
       />
+      <div className="w-full flex items-center justify-center p-2">
+        <Button color="failure" onClick={handleDelete}>Delete</Button>
+      </div>
     </div>
   );
 };

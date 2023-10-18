@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import ModalPoll from "./ModalPoll.jsx";
 
-const Navbar = ({isPollAdded,setIsPollAdded}) => {
+const Navbar = ({setPolls}) => {
     const navigate = useNavigate()
     const handleLogoutClick = () => {
         navigate("/login")
@@ -19,7 +19,7 @@ const Navbar = ({isPollAdded,setIsPollAdded}) => {
                 >
                     Add Poll
                 </button>
-                <ModalPoll isPollAdded={isPollAdded} setIsPollAdded={setIsPollAdded} props={props}/>
+                <ModalPoll setPolls={setPolls} props={props}/>
                 <div className="flex items-center">
                     <button
                         onClick={handleLogoutClick}

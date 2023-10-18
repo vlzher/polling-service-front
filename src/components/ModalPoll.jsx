@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { Modal } from "flowbite-react";
 import PollField from "./PollField.jsx";
 import DeleteModal from "./DeleteModal.jsx";
+import {makePoll} from "../utils/makePoll.js";
 
 const errorInputClassname =
   "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500";
@@ -12,7 +13,7 @@ const normalInputClassname =
 const normalLabelClassname =
   "block mb-2 text-sm font-medium text-gray-900 dark:text-white";
 
-const ModalPoll = ({ props, isPollAdded, setIsPollAdded }) => {
+const ModalPoll = ({ props, setPolls }) => {
   const [pollName, setPollName] = useState("");
   const [isInputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,7 +56,7 @@ const ModalPoll = ({ props, isPollAdded, setIsPollAdded }) => {
     setPollFields([]);
     setPollName("");
     setErrorMessage("")
-    setIsPollAdded(!isPollAdded)
+    setPolls(prev=> [...prev, makePoll(pollName,pollFields)])
     setInputError(false)
     props.setOpenModal(undefined);
   };
@@ -100,7 +101,7 @@ const ModalPoll = ({ props, isPollAdded, setIsPollAdded }) => {
                 type="text"
                 value={pollField}
                 onChange={(e) => setPollField(e.target.value)}
-                className="w-4/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="w-3/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Name of poll field"
                 required
               />
