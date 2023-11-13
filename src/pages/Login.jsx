@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import {login} from "../api/api.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -7,9 +8,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmitButtonClick = () => {
-    navigate("/polls");
-    setUsername("")
-    setPassword("")
+    login(username,password).then((ok)=> {
+      if(ok){
+        navigate("/polls");
+        setUsername("");
+        setPassword("");
+      }
+    })
+
   };
   return (
     <div className="w-screen h-screen flex  justify-center items-center flex-col">

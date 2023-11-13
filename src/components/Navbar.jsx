@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import ModalPoll from "./ModalPoll.jsx";
+import {TOKEN_CONST} from "../api/api.js";
 
 const Navbar = ({setPolls}) => {
     const navigate = useNavigate()
     const handleLogoutClick = () => {
+        localStorage.setItem(TOKEN_CONST, "");
         navigate("/login")
     }
     const [openModal, setOpenModal] = useState();

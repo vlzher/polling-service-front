@@ -1,13 +1,17 @@
-import React, { useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import Navbar from "../components/Navbar.jsx";
 import { pollsMocks } from "../../pollsMocks.js";
 import CustomPoll from "../components/CustomPoll.jsx";
+import {TOKEN_CONST} from "../api/api.js";
+import {useNavigate} from "react-router-dom";
 
-const PollsPage = () => {
-
+const PollsPage = () => {const navigate = useNavigate();
   const [polls, setPolls] = useState(pollsMocks)
-
+   useEffect(()=> {
+       if(!localStorage.getItem(TOKEN_CONST))
+           navigate("/");
+   },[])
   return (
     <div className="w-full flex items-center flex-col">
       <Navbar setPolls={setPolls}/>
