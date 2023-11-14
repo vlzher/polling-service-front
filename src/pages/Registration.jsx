@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {register} from "../api/api.js";
+import { register } from "../api/api.js";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -8,13 +8,13 @@ const Registration = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmitButtonClick = () => {
-    register(username,password).then((ok)=> {
-      if(ok){
+    register(username, password).then((ok) => {
+      if (ok) {
         navigate("/login");
-        setUsername("")
-        setPassword("")
+        setUsername("");
+        setPassword("");
       }
-    })
+    });
   };
   return (
     <div className="w-screen h-screen flex  justify-center items-center flex-col">
@@ -41,7 +41,7 @@ const Registration = () => {
             type="text"
             id="website-admin"
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="elonmusk"
           />

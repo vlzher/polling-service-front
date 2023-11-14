@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {login} from "../api/api.js";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../api/api.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,14 +8,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmitButtonClick = () => {
-    login(username,password).then((ok)=> {
-      if(ok){
+    login(username, password).then((ok) => {
+      if (ok) {
         navigate("/polls");
         setUsername("");
         setPassword("");
       }
-    })
-
+    });
   };
   return (
     <div className="w-screen h-screen flex  justify-center items-center flex-col">
@@ -42,7 +41,7 @@ const Login = () => {
             type="text"
             id="website-admin"
             value={username}
-            onChange={e=> setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="elonmusk"
           />
@@ -58,18 +57,21 @@ const Login = () => {
             type="password"
             id="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="•••••••••"
             required
           />
         </div>
         <div className="w-full flex justify-between">
-          <Link to="/registration" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          <Link
+            to="/registration"
+            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          >
             Go to registration
           </Link>
           <button
-              onClick={handleSubmitButtonClick}
+            onClick={handleSubmitButtonClick}
             type="submit"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
