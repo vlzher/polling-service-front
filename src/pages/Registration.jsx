@@ -6,13 +6,17 @@ const Registration = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmitButtonClick = () => {
-    register(username, password).then((ok) => {
-      if (ok) {
+    register(username, password).then(({ success, error }) => {
+      if (success) {
         navigate("/login");
         setUsername("");
         setPassword("");
+        setError("");
+      } else {
+        setError(error);
       }
     });
   };
@@ -78,6 +82,7 @@ const Registration = () => {
             Registration
           </button>
         </div>
+        <div className={"text-lg font-medium text-red-900"}>{error}</div>
       </div>
     </div>
   );

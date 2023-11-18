@@ -22,16 +22,16 @@ const ModalPoll = ({ props, setPolls }) => {
       setErrorMessage("poll name length must have 4 symbols");
       return;
     }
-    createPoll(pollName).then((res) => {
-      if (Object.keys(res).length !== 0) {
+    createPoll(pollName).then(({ success, data, error }) => {
+      if (success) {
         setPollName("");
         setErrorMessage("");
-        setPolls((prev) => [...prev, res]);
+        setPolls((prev) => [...prev, data]);
         setInputError(false);
         props.setOpenModal(undefined);
       } else {
         setInputError(true);
-        setErrorMessage("Internal Error");
+        setErrorMessage(error);
       }
     });
   };

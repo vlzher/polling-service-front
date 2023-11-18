@@ -9,19 +9,34 @@ export const login = async (login, password) => {
       login,
       password,
     });
-    localStorage.setItem(TOKEN_CONST, response.data);
-    return true;
+    if (response.status === 200) {
+      localStorage.setItem(TOKEN_CONST, response.data);
+      return { success: true, error: null };
+    } else if (response.status === 401) {
+      return { success: false, error: "Invalid username or password" };
+    } else {
+      return { success: false, error: "Login failed" };
+    }
   } catch (error) {
-    return false;
+    return { success: false, error: "Login failed" };
   }
 };
 
 export const register = async (login, password) => {
   try {
-    await axios.post(`${baseURL}/api/auth/register`, { login, password });
-    return true;
+    const response = await axios.post(`${baseURL}/api/auth/register`, {
+      login,
+      password,
+    });
+    if (response.status === 200) {
+      return { success: true, error: null };
+    } else if (response.status === 409) {
+      return { success: false, error: "Username already exists" };
+    } else {
+      return { success: false, error: "Registration failed" };
+    }
   } catch (error) {
-    return false;
+    return { success: false, error: "Registration failed" };
   }
 };
 
@@ -34,13 +49,13 @@ export const getAllPolls = async () => {
     });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    return [];
   }
 };
 
 export const createPoll = async (pollName) => {
   try {
-    const res = await axios.post(
+    const response = await axios.post(
       `${baseURL}/api/polls`,
       { pollName },
       {
@@ -49,9 +64,16 @@ export const createPoll = async (pollName) => {
         },
       }
     );
-    return res.data;
+    if (response.status === 201) {
+      return { success: true, data: response.data, error: null };
+    } else if (response.status === 404) {
+      return { success: false, data: null, error: "User not found" };
+    } else {
+      return { success: false, data: null, error: "Internal Server Error" };
+    }
   } catch (error) {
-    return null;
+    console.error("Poll creation failed:", error);
+    return { success: false, data: null, error: "Internal Server Error" };
   }
 };
 
@@ -66,9 +88,17 @@ export const answerQuestion = async (pollID, questionOptionID) => {
         },
       }
     );
-    return response.data;
+
+    if (response.status === 201) {
+      return { success: true, error: null };
+    } else if (response.status === 404) {
+      return { success: false, error: "Not found" };
+    } else {
+      return { success: false, error: "Internal Server Error" };
+    }
   } catch (error) {
-    throw error.response.data;
+    console.error("Answer submission failed:", error);
+    return { success: false, error: "Internal Server Error" };
   }
 };
 
@@ -82,11 +112,17 @@ export const getUserAnswers = async (pollID) => {
         },
       }
     );
-    return response.data;
+    if (response.status === 200) {
+      return { success: true, data: response.data, error: null };
+    } else {
+      return { success: false, data: null, error: "Internal Server Error" };
+    }
   } catch (error) {
-    throw error.response.data;
+    console.error("Error fetching user answers:", error);
+    return { success: false, data: null, error: "Internal Server Error" };
   }
 };
+
 export const getPollDetails = async (pollID) => {
   try {
     const response = await axios.get(`${baseURL}/api/polls/${pollID}`, {
@@ -94,10 +130,15 @@ export const getPollDetails = async (pollID) => {
         Authorization: `${localStorage.getItem(TOKEN_CONST)}`,
       },
     });
-    console.log(response.data);
-    return response.data;
+    if (response.status === 200) {
+      return { success: true, data: response.data, error: null };
+    } else if (response.status === 404) {
+      return { success: false, data: null, error: "Poll not found" };
+    } else {
+      return { success: false, data: null, error: "Internal Server Error" };
+    }
   } catch (error) {
-    throw error.response.data;
+    return { success: false, data: null, error: "Internal Server Error" };
   }
 };
 
@@ -108,9 +149,20 @@ export const deletePoll = async (pollID) => {
         Authorization: `${localStorage.getItem(TOKEN_CONST)}`,
       },
     });
-    return true;
+    if (response.status === 204) {
+      return { success: true, error: null };
+    } else if (response.status === 403) {
+      return {
+        success: false,
+        error: "Forbidden: You don't have permission to delete this poll",
+      };
+    } else if (response.status === 404) {
+      return { success: false, error: "Poll not found" };
+    } else {
+      return { success: false, error: "Internal Server Error" };
+    }
   } catch (error) {
-    return false;
+    return { success: false, error: "Internal Server Error" };
   }
 };
 
@@ -129,10 +181,15 @@ export const addQuestionToPoll = async (
         },
       }
     );
-    return response.data;
+    if (response.status === 201) {
+      return { success: true, data: response.data, error: null };
+    } else if (response.status === 404) {
+      return { success: false, data: null, error: "Poll not found" };
+    } else {
+      return { success: false, data: null, error: "Internal Server Error" };
+    }
   } catch (error) {
-    console.log(error.response.data);
-    return {};
+    return { success: false, data: null, error: "Internal Server Error" };
   }
 };
 
@@ -146,8 +203,19 @@ export const removeQuestionFromPoll = async (pollID, questionID) => {
         },
       }
     );
-    return true;
+    if (response.status === 204) {
+      return { success: true, error: null };
+    } else if (response.status === 403) {
+      return {
+        success: false,
+        error: "Forbidden: You don't have permission to remove this question",
+      };
+    } else if (response.status === 404) {
+      return { success: false, error: "Poll or question not found" };
+    } else {
+      return { success: false, error: "Internal Server Error" };
+    }
   } catch (error) {
-    return false;
+    return { success: false, error: "Internal Server Error" };
   }
 };

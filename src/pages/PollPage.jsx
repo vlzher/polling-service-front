@@ -19,26 +19,37 @@ const PollPage = () => {
   const [openModal, setOpenModal] = useState();
   const props = { openModal, setOpenModal };
   const [myPoll, setMyPoll] = useState(false);
+  const [error, setError] = useState("");
   useEffect(() => {
-    getPollDetails(id).then((res) => {
-      setPollName(res.pollName);
-      setQuestions(res.questions.map((question) => makeQuestion(question)));
-      setMyPoll(res.myPoll);
+    getPollDetails(id).then(({ success, data, error }) => {
+      if (success) {
+        setPollName(data.pollName);
+        setQuestions(data.questions.map((question) => makeQuestion(question)));
+        setMyPoll(data.myPoll);
+        setError("");
+      } else {
+        setError(error);
+      }
     });
   }, []);
 
   useEffect(() => {
     if (!localStorage.getItem(TOKEN_CONST)) navigate("/");
     localStorage.setItem("react-polls", JSON.stringify([]));
-    getUserAnswers(id).then((res) => {
-      const result = res.map((answer) => {
-        return {
-          question: answer.questionName,
-          option: answer.optionName,
-          url: window.location.href,
-        };
-      });
-      localStorage.setItem("react-polls", JSON.stringify(result));
+    getUserAnswers(id).then(({ success, data, error }) => {
+      if (success) {
+        const result = data.map((answer) => {
+          return {
+            question: answer.questionName,
+            option: answer.optionName,
+            url: window.location.href,
+          };
+        });
+        localStorage.setItem("react-polls", JSON.stringify(result));
+        setError("");
+      } else {
+        setError(error);
+      }
     });
   }, []);
   return (
@@ -64,8 +75,8 @@ const PollPage = () => {
         {myPoll ? (
           <button
             onClick={() => {
-              deletePoll(id).then((ok) => {
-                if (ok) navigate("/polls");
+              deletePoll(id).then(({ success }) => {
+                if (success) navigate("/polls");
               });
             }}
             className="block text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
@@ -87,6 +98,7 @@ const PollPage = () => {
           questionName={question.questionName}
         />
       ))}
+      {error && <div>{error}</div>}
     </div>
   );
 };

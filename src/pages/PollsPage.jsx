@@ -10,6 +10,7 @@ const PollsPage = () => {
   const [polls, setPolls] = useState([]);
   const [openModal, setOpenModal] = useState();
   const props = { openModal, setOpenModal };
+
   useEffect(() => {
     if (!localStorage.getItem(TOKEN_CONST)) {
       navigate("/");

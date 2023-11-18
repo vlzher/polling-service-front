@@ -53,20 +53,22 @@ const ModalQuestion = ({ props, setQuestions }) => {
       setErrorMessage("poll name length must have 4 symbols");
       return;
     }
-    addQuestionToPoll(id, questionName, questionOptions).then((res) => {
-      if (Object.keys(res).length > 0) {
-        setQuestionOption("");
-        setQuestionOptions([]);
-        setQuestionName("");
-        setErrorMessage("");
-        setQuestions((prev) => [...prev, makeQuestion(res)]);
-        setInputError(false);
-        props.setOpenModal(undefined);
-      } else {
-        setInputError(true);
-        setErrorMessage("Internal Error");
+    addQuestionToPoll(id, questionName, questionOptions).then(
+      ({ success, data, error }) => {
+        if (success) {
+          setQuestionOption("");
+          setQuestionOptions([]);
+          setQuestionName("");
+          setErrorMessage("");
+          setQuestions((prev) => [...prev, makeQuestion(data)]);
+          setInputError(false);
+          props.setOpenModal(undefined);
+        } else {
+          setInputError(true);
+          setErrorMessage(error);
+        }
       }
-    });
+    );
   };
 
   return (

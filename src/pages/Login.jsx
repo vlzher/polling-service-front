@@ -6,13 +6,16 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
   const handleSubmitButtonClick = () => {
-    login(username, password).then((ok) => {
-      if (ok) {
+    login(username, password).then(({ success, error }) => {
+      if (success) {
         navigate("/polls");
         setUsername("");
         setPassword("");
+        setError("");
+      } else {
+        setError(error);
       }
     });
   };
@@ -77,6 +80,7 @@ const Login = () => {
           >
             Login
           </button>
+          <div className={"text-lg font-medium text-red-900"}>{error}</div>
         </div>
       </div>
     </div>

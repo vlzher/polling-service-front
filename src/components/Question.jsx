@@ -13,25 +13,34 @@ const Question = ({
 }) => {
   const [questionOptions, setQuestionOptions] = useState(options);
   const { id } = useParams();
+  const [error, setError] = useState("");
   const handleVote = (optionName) => {
     answerQuestion(
       id,
       questionOptions.find((option) => option.option === optionName).optionID
-    );
-    const newPollAnswers = questionOptions.map((answer) => {
-      if (answer.option === optionName) answer.votes++;
-      return answer;
+    ).then(({ success, error }) => {
+      if (success) {
+        const newPollAnswers = questionOptions.map((answer) => {
+          if (answer.option === optionName) answer.votes++;
+          return answer;
+        });
+        setQuestionOptions(newPollAnswers);
+        setError("");
+      } else {
+        setError(error);
+      }
     });
-    setQuestionOptions(newPollAnswers);
-    // send data
   };
 
   const handleDelete = () => {
-    removeQuestionFromPoll(id, questionID).then((ok) => {
-      if (ok) {
+    removeQuestionFromPoll(id, questionID).then(({ success, error }) => {
+      if (success) {
         setQuestions((prev) =>
           prev.filter((val) => val["questionName"] !== questionName)
         );
+        setError("");
+      } else {
+        setError(error);
       }
     });
   };
@@ -51,6 +60,7 @@ const Question = ({
           </Button>
         </div>
       )}
+      {error && <div>{error}</div>}
     </div>
   );
 };
